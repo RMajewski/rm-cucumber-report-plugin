@@ -6,14 +6,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>de.rene_majewski.maven</groupId>
-  <artifactId>rm-cucumber-report</artifactId>
+  <artifactId>rm-cucumber-report-plugin</artifactId>
   <version>0.1</version>
   <packaging>maven-plugin</packaging>
 
   <name>rm-cucumber-report Maven Plugin</name>
-
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+  <description>A simple maven plugin to create a one page report for Cucumber.</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -21,8 +19,46 @@
     <maven.compiler.target>1.7</maven.compiler.target>
   </properties>
 
+  <url>https://rmajewski.github.io/rm-maven-cucumber-report-plugin</url>
+
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub René Majewski Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/rmajewski/rm-maven-cucumber-report-plugin</url>
+    </repository>
+
+    <site>
+      <id>site</id>
+      <url>${project.url}</url>
+    </site>
+  </distributionManagement>
+
+  <licenses>
+    <license>
+      <name>GPL-v3.0</name>
+      <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>rmajewski</id>
+      <name>René Majewski</name>
+      <email>rene.majewski@gmx.de</email>
+      <url>https://www.rene-majewski.de</url>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>Europe/Berlin</timezone>
+      <properties>
+        <picUrl>https://lh3.googleusercontent.com/a-/AOh14Gi_YCcIz1I5ePq4hNOZu-6kogfII2sDBeAABoVv0g=s288-p-no</picUrl>
+      </properties>
+    </developer>
+  </developers>
+
   <dependencies>
-    <!-- Daxia API and Doxia Sitetools -->
+    <!-- Doxia API and Doxia Sitetools -->
     <dependency>
       <groupId>org.apache.maven.doxia</groupId>
       <artifactId>doxia-sink-api</artifactId>

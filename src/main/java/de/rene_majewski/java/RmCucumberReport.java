@@ -39,7 +39,7 @@ import de.rene_majewski.java.report.Report;
  * @author René Majewski
  */
 @Mojo(
-  name = "rm-cucumber-report",
+  name = "rm-cucumber-report-plugin",
   defaultPhase = LifecyclePhase.SITE,
   requiresDependencyResolution = ResolutionScope.RUNTIME,
   requiresProject = true,
