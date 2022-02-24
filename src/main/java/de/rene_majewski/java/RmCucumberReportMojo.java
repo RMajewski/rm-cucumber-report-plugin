@@ -45,7 +45,7 @@ import de.rene_majewski.java.report.Report;
   requiresProject = true,
   threadSafe = true
 )
-public class RmCucumberReport extends AbstractMavenReport {
+public class RmCucumberReportMojo extends AbstractMavenReport {
   @Parameter(defaultValue = "${project}", readonly = true)
   private MavenProject project;
 
