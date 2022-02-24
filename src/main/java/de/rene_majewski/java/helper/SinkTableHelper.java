@@ -1,7 +1,10 @@
 package de.rene_majewski.java.helper;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.maven.doxia.sink.Sink;
 import org.apache.maven.doxia.sink.impl.SinkEventAttributeSet;
+import de.rene_majewski.java.report.StepArgument;
 
 public class SinkTableHelper {
   public static void writeRow2ColsFirstBold(Sink sink, String cell1, String cell2) {
@@ -22,7 +25,14 @@ public class SinkTableHelper {
     writeScenarioRow(sink, keyword, name, status, duration, method, pass, failure, error, skip, false);
   }
 
+  @Deprecated
   public static void writeScenarioRow(Sink sink, String keyword, String name, String status, long duration, String method, boolean pass, boolean failure, boolean error, boolean skip, boolean undefined) {
+    writeScenarioRow(sink, keyword, name, new ArrayList<>(), status, duration, method, pass, failure, error, skip, undefined);
+  }
+
+  public static void writeScenarioRow(Sink sink, String keyword, String name,
+      List<StepArgument> arguments, String status, long duration, String method, boolean pass,
+      boolean failure, boolean error, boolean skip, boolean undefined) {
     String style = "";
     if (pass) {
       style = "color: #16a085;";
@@ -76,7 +86,7 @@ public class SinkTableHelper {
 
     sink.tableCell();
     if (name != null && !name.isEmpty()) {
-      sink.text(name);
+      writeHighlightedName(sink, name, arguments);
     }
     sink.tableCell_();
 
@@ -132,5 +142,31 @@ public class SinkTableHelper {
     }
     sink.tableCell_();
     sink.tableRow_();
+  }
+
+  private static void writeHighlightedName(Sink sink, String name, List<StepArgument> arguments) {
+    if (arguments == null || arguments.isEmpty()) {
+      sink.text(name);
+    } else {
+      int startOffset = 0;
+      int endOffset = 0;
+
+      for (StepArgument arg : arguments) {
+        endOffset = arg.getOffset();
+        sink.text(name.substring(startOffset, endOffset));
+
+        startOffset = endOffset;
+        endOffset += arg.getValue().length();
+        sink.bold();
+        sink.text(name.substring(startOffset, endOffset));
+        sink.bold_();
+
+        startOffset = endOffset;
+      }
+
+      if (startOffset < name.length()) {
+        sink.text(name.substring(startOffset));
+      }
+    }
   }
 }

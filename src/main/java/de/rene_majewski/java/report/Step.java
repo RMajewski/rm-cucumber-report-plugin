@@ -7,10 +7,12 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import org.apache.maven.doxia.sink.Sink;
+import de.rene_majewski.java.cucumber_import.CucumberReportMatchArgument;
 import de.rene_majewski.java.cucumber_import.CucumberReportStep;
 import de.rene_majewski.java.helper.JavaSnippet;
 import de.rene_majewski.java.helper.SinkTableHelper;
@@ -23,9 +25,12 @@ import io.cucumber.cucumberexpressions.ParameterTypeRegistry;
 public class Step extends Parent {
   private String status;
   private String method;
+  private List<StepArgument> arguments;
 
   public Step(CucumberReportStep step) {
     super();
+    arguments = new ArrayList<>();
+
     duration = step.result.duration;
     keyword = step.keyword;
     name = step.name;
@@ -35,8 +40,16 @@ public class Step extends Parent {
     undefined = step.result.status.equals(UNDEFINED);
     status = step.result.status;
 
+    if (step.match != null && step.match.arguments != null && step.match.arguments.length > 0) {
+      for (CucumberReportMatchArgument arg : step.match.arguments) {
+        StepArgument stepArgument = new StepArgument(arg.val, arg.offset);
+        arguments.add(stepArgument);
+      }
+    }
+
     // Snippet generieren wenn es undefiniert ist.
     if (method == null || method.isEmpty()) {
+      undefined = true;
       final String  source = "" +
         "# language: de\n" +
         "\n" +
@@ -78,6 +91,7 @@ public class Step extends Parent {
       sink,
       keyword,
       name,
+      arguments,
       status,
       duration,
       method,
