@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <body>
+    <menu name="Übersicht">
+      <item name="Einführung" href="index.html" />
+      <item name="Ziele" href="goals.html" />
+      <item name="Verwendung" href="usage.html" />
+      <item name="FAQ" href="faq.html" />
+    </menu>
+
+    <menu name="Projekt-Informationen">
+      <item name="Projekt-Berichte" href="project-reports.html" />
+      <item name="Projekt-Informationen" href="project-info.html" />
+      <item name="Issues" href="issue-management.html" />
+      <item name="Javadocs" href="apidocs/index.html" />
+      <item name="Lizenz" href="licenses.html" />
+    </menu>
+  </body>
+</project>

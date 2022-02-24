@@ -10,6 +10,12 @@
 
   <name>rm-cucumber-report Maven Plugin</name>
   <description>A simple maven plugin to create a one page report for Cucumber.</description>
+  <url>https://rmajewski.github.io/rm-maven-cucumber-report-plugin</url>
+  <inceptionYear>2022</inceptionYear>
+
+  <prerequisites>
+    <maven>${maven.version}</maven>
+  </prerequisites>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -24,9 +30,9 @@
 
     <maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
     <maven.compiler.showWarnings>true</maven.compiler.showWarnings>
-  </properties>
 
-  <url>https://rmajewski.github.io/rm-maven-cucumber-report-plugin</url>
+    <maven.version>3.8.4</maven.version>
+  </properties>
 
   <distributionManagement>
     <repository>
@@ -40,6 +46,11 @@
       <url>${project.url}</url>
     </site>
   </distributionManagement>
+
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://www.github.com/rmajewski/rm-maven-cucumber-report-plugin/issues</url>
+  </issueManagement>
 
   <licenses>
     <license>
@@ -63,6 +74,11 @@
       </properties>
     </developer>
   </developers>
+
+  <organization>
+    <name>René Majewski</name>
+    <url>https://www.rene-majewski.de</url>
+  </organization>
 
   <dependencies>
     <!-- Doxia API and Doxia Sitetools -->
@@ -102,21 +118,21 @@
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-core</artifactId>
-      <version>3.8.4</version>
+      <version>${maven.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-artifact</artifactId>
-      <version>3.8.4</version>
+      <version>${maven.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-compat</artifactId>
-      <version>3.8.4</version>
+      <version>${maven.version}</version>
       <scope>provided</scope>
     </dependency>
 
@@ -203,8 +219,33 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.11.0</version>
+        <configuration>
+          <locales>de</locales>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.3.2</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <version>3.1.1</version>
+      </plugin>
+    </plugins>
+  </reporting>
 
   <profiles>
     <profile>
@@ -237,6 +278,27 @@
                   <goal>install</goal>
                   <goal>integration-test</goal>
                   <goal>verify</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>docck</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-docck-plugin</artifactId>
+            <version>1.1</version>
+            <executions>
+              <execution>
+                <id>docck-check</id>
+                <goals>
+                  <goal>check</goal>
                 </goals>
               </execution>
             </executions>
