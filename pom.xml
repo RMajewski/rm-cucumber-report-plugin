@@ -7,7 +7,7 @@
 
   <groupId>de.rene_majewski.maven</groupId>
   <artifactId>rm-cucumber-report-plugin</artifactId>
-  <version>0.1</version>
+  <version>0.1.0</version>
   <packaging>maven-plugin</packaging>
 
   <name>rm-cucumber-report Maven Plugin</name>
@@ -15,8 +15,17 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
+    <maven.compiler.encoding>${project.build.sourceEncoding}</maven.compiler.encoding>
+    <maven.compiler.resources.encoding>${project.build.sourceEncoding}</maven.compiler.resources.encoding>
+    <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
+
+    <java.version>1.8</java.version>
+
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+
+    <maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
+    <maven.compiler.showWarnings>true</maven.compiler.showWarnings>
   </properties>
 
   <url>https://rmajewski.github.io/rm-maven-cucumber-report-plugin</url>
@@ -105,6 +114,13 @@
       <version>3.3.4</version>
     </dependency>
 
+    <!-- Cucumber -->
+    <dependency>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-java</artifactId>
+      <version>7.2.0</version>
+    </dependency>
+
     <!-- JSON -->
     <dependency>
       <groupId>com.google.code.gson</groupId>
@@ -189,4 +205,15 @@
       </build>
     </profile>
   </profiles>
+
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.cucumber</groupId>
+        <artifactId>messages</artifactId>
+        <version>17.1.0</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 </project>

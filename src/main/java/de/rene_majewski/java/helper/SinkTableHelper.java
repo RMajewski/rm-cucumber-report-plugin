@@ -17,7 +17,12 @@ public class SinkTableHelper {
     sink.tableRow_();
   }
 
+  @Deprecated
   public static void writeScenarioRow(Sink sink, String keyword, String name, String status, long duration, String method, boolean pass, boolean failure, boolean error, boolean skip) {
+    writeScenarioRow(sink, keyword, name, status, duration, method, pass, failure, error, skip, false);
+  }
+
+  public static void writeScenarioRow(Sink sink, String keyword, String name, String status, long duration, String method, boolean pass, boolean failure, boolean error, boolean skip, boolean undefined) {
     String style = "";
     if (pass) {
       style = "color: #16a085;";
@@ -35,6 +40,10 @@ public class SinkTableHelper {
       style = "color: #3498db;";
     }
 
+    if (undefined) {
+      style = "color: #d4ac0d; font-weight: bolder;";
+    }
+
     SinkEventAttributeSet atts = new SinkEventAttributeSet();
     atts.addAttribute(SinkEventAttributeSet.STYLE, style);
 
@@ -45,6 +54,14 @@ public class SinkTableHelper {
 
       if (pass) {
         sink.figureGraphics("images/icon_success_sml.gif");
+      }
+
+      else if (undefined) {
+        sink.figureGraphics("images/icon_warning_sml.gif");
+      }
+
+      else if (skip) {
+        sink.figureGraphics("images/icon_info_sml.gif");
       }
 
       sink.figure_();
@@ -75,7 +92,13 @@ public class SinkTableHelper {
 
     sink.tableCell();
     if (method != null && !method.isEmpty()) {
-      sink.text(method);
+      if (method.indexOf("\n") > 0) {
+        sink.verbatim(null);
+        sink.text(method);
+        sink.verbatim_();
+      } else {
+        sink.text(method);
+      }
     }
     sink.tableCell_();
 
@@ -99,6 +122,12 @@ public class SinkTableHelper {
 
     sink.tableCell();
     if (skip) {
+      sink.text("x");
+    }
+    sink.tableCell_();
+
+    sink.tableCell();
+    if (undefined) {
       sink.text("x");
     }
     sink.tableCell_();

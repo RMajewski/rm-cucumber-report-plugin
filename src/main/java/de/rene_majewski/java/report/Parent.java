@@ -8,6 +8,7 @@ public abstract class Parent {
   protected boolean error;
   protected boolean failure;
   protected boolean pending;
+  protected boolean undefined;
   protected boolean skip;
   protected String description;
   protected LocalDateTime startedAt;
@@ -21,6 +22,7 @@ public abstract class Parent {
     failure = false;
     pending = false;
     skip = false;
+    undefined = false;
     startedAt = null;
     description = "";
     name = "";
@@ -166,6 +168,20 @@ public abstract class Parent {
    */
   public void setDuration(long duration) {
     this.duration = duration;
+  }
+
+  /**
+   * @return the undefined
+   */
+  public boolean isUndefined() {
+    return undefined;
+  }
+
+  /**
+   * @param undefined the undefined to set
+   */
+  public void setUndefined(boolean undefined) {
+    this.undefined = undefined;
   }
 
   public abstract void writeToReport(Sink sink);

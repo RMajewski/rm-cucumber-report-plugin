@@ -107,6 +107,7 @@ public class Scenario extends Parent {
         Sink.JUSTIFY_CENTER,
         Sink.JUSTIFY_CENTER,
         Sink.JUSTIFY_CENTER,
+        Sink.JUSTIFY_CENTER,
         Sink.JUSTIFY_CENTER
       },
       false
@@ -176,6 +177,10 @@ public class Scenario extends Parent {
 
     sink.tableHeaderCell();
     sink.text("Übersprungen");
+    sink.tableHeaderCell_();
+
+    sink.tableHeaderCell();
+    sink.text("Step fehlt");
     sink.tableHeaderCell_();
     sink.tableRow_();
   }
