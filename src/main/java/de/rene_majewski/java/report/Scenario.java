@@ -12,20 +12,33 @@ import de.rene_majewski.java.cucumber_import.CucumberReportStep;
 import de.rene_majewski.java.helper.DateTimeHelper;
 import de.rene_majewski.java.helper.SinkTableHelper;
 
+/**
+ * Bereitet die Daten für ein Szenario auf und zeigt diese an.
+ *
+ * @author René Majewski
+ */
 public class Scenario extends Parent {
   private List<Step> steps;
   private List<Hook> before;
   private List<Hook> after;
 
+  /**
+   * Initialisiert die Klasse.
+   *
+   * Importiert die Daten aus dem {@link CucumberReportElement} und bereitet
+   * sie zum anzeigen vor.
+   *
+   * @param element Szenario dessen Daten aufbereitet werden sollen.
+   */
   public Scenario(CucumberReportElement element) {
     super();
     steps = new ArrayList<>();
     before = generateHookList(element.before);
     after = generateHookList(element.after);
 
-    name = element.name;
-    keyword = element.keyword;
-    description = element.description;
+    name = element.getName();
+    keyword = element.getKeyword();
+    description = element.getDescription();
     startedAt = LocalDateTime.parse(element.start_timestamp, DateTimeFormatter.ISO_DATE_TIME);
 
     for (CucumberReportStep crs : element.steps) {
@@ -39,10 +52,20 @@ public class Scenario extends Parent {
     pass = !failure && !error;
   }
 
+  /**
+   * Ermittelt die Anzahl an Schritten die zu diesem Szenario gehören.
+   *
+   * @return Anzahl an Schritten die zu diesen Szenario gehören.
+   */
   public int getStepsCount() {
     return steps.size();
   }
 
+  /**
+   * Ermittelt die Anzahl an Schritten die richtig ausgeführt wurden.
+   *
+   * @return Anzahl an Schritten die richtig ausgeführt wurden.
+   */
   public int getStepsPass() {
     int result = 0;
     for (Step step : steps) {
@@ -51,6 +74,11 @@ public class Scenario extends Parent {
     return result;
   }
 
+  /**
+   * Ermittelt die Anzahl an fehlgeschlagenen Schritten.
+   *
+   * @return Anzahl an fehlgeschlagenen Schritten.
+   */
   public int getStepsFailure() {
     int result = 0;
     for (Step step : steps) {
@@ -59,6 +87,11 @@ public class Scenario extends Parent {
     return result;
   }
 
+  /**
+   * Ermittelt die Anzahl an übersprungenen Schritten.
+   *
+   * @return Anzahl an übersprungenen Schritten.
+   */
   public int getStepsSkip() {
     int result = 0;
     for (Step step : steps) {
@@ -67,6 +100,11 @@ public class Scenario extends Parent {
     return result;
   }
 
+  /**
+   * Anzahl an Schritten die einen Fehler aufweisen.
+   *
+   * @return Anzahl an Schritten die einen Fehler aufweisen.
+   */
   public int getStepsError() {
     int result = 0;
     for (Step step : steps) {
@@ -75,6 +113,7 @@ public class Scenario extends Parent {
     return result;
   }
 
+  /** {@inheritDoc} */
   @Override
   public void writeToReport(Sink sink) {
     sink.section(3, null);
@@ -126,6 +165,13 @@ public class Scenario extends Parent {
     sink.section_(3);
   }
 
+  /**
+   * Erstellt eine Liste mit den ausgeführten Hooks.
+   *
+   * @param hooks Array von {@link CucumberReportHook}.
+   *
+   * @return Erstellte Liste mit {@link Hook}s.
+   */
   private List<Hook> generateHookList(CucumberReportHook[] hooks) {
     List<Hook> result = new ArrayList<>();
 
@@ -138,6 +184,13 @@ public class Scenario extends Parent {
     return result;
   }
 
+  /**
+   * Schreibt die Spaltenüberschriften für das Szenario in zu erstellende
+   * Report-Datei.
+   *
+   * @param sink {@link org.apache.maven.doxia.sink.Sink}-Objekt das genutzt
+   *             werden soll.
+   */
   private void writeScenarioRowHeader(Sink sink) {
     sink.tableRow();
     sink.tableHeaderCell();
@@ -185,6 +238,19 @@ public class Scenario extends Parent {
     sink.tableRow_();
   }
 
+  /**
+   * Ermittelt den Status des Szenarios.
+   *
+   * @return {@link java.lang.String}-Objekt das den Status des Szenarios
+   *         beinhaltet. Mögliche Status-Eintragungen:
+   *         <ul>
+   *           <li>Fehler</li>
+   *           <li>Fehlerfrei</li>
+   *           <li>Nicht bestanden</li>
+   *           <li>Nicht definiert</li>
+   *           <li>Übersprungen</li>
+   *         </ul>
+   */
   private String getStatus() {
     if (isPass()) {
       return "Fehlerfrei";
@@ -198,9 +264,22 @@ public class Scenario extends Parent {
       return "Übersprungen";
     }
 
+    if (isUndefined()) {
+      return "Nicht definiert";
+    }
+
     return "Fehler";
   }
 
+  /**
+   * Schreibt den Hook in den Bericht.
+   *
+   * @param sink {@link org.apache.maven.doxia.sink.Sink}-Objekt das zum
+   *             erstellen der HTML-Seite genutzt wird.
+   *
+   * @param hooks Liste mit {@link Hook}-Einträgen die in den Bericht
+   *              geschrieben werden soll.
+   */
   private void writeHook(Sink sink, List<Hook> hooks) {
     for (Hook hook : hooks) {
       SinkTableHelper.writeScenarioRow(

@@ -26,14 +26,13 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
-import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
 import de.rene_majewski.java.cucumber_import.CucumberReport;
 import de.rene_majewski.java.report.Report;
 
 /**
- * Hauptklasse des Mojo.
+ * Mojo um den Cucumber-Bericht zu generieren.
  *
  * @since 0.1.0
  * @author René Majewski
@@ -46,27 +45,31 @@ import de.rene_majewski.java.report.Report;
   threadSafe = true
 )
 public class RmCucumberReportMojo extends AbstractMavenReport {
-  @Parameter(defaultValue = "${project}", readonly = true)
-  private MavenProject project;
-
+  /**
+   * JSON-Datei mit den Daten von der Cucumber-Ausführung.
+   */
   @Parameter(defaultValue = "target/cucumber.json", property = "inputJsonFile", required = true)
   private File inputJsonFile;
 
+  /** {@inheritDoc} */
   @Override
   public String getDescription(Locale arg0) {
     return "Cucumber-Report";
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getName(Locale arg0) {
     return "Cucumber";
   }
 
+  /** {@inheritDoc} */
   @Override
   public String getOutputName() {
     return "cucumber";
   }
 
+  /** {@inheritDoc} */
   @Override
   protected void executeReport(Locale locale) throws MavenReportException {
     // Cucumber-Daten einlesen
@@ -74,7 +77,7 @@ public class RmCucumberReportMojo extends AbstractMavenReport {
       throw new MavenReportException(inputJsonFile.toString() + " not exists");
     }
 
-    CucumberReport data[] = null;
+    CucumberReport[] data = null;
 
     try {
       final Gson gson = new Gson();
