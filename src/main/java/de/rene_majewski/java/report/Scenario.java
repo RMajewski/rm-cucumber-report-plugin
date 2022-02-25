@@ -18,8 +18,21 @@ import de.rene_majewski.java.helper.SinkTableHelper;
  * @author René Majewski
  */
 public class Scenario extends Parent {
+  /**
+   * Speichert eine Liste mit den Schritten die zu diesem Szenario gehören.
+   */
   private List<Step> steps;
+
+  /**
+   * Speichert eine Liste mit dem Hooks die aufgerufen wurden um das Szenario
+   * vorzubereiten.
+   */
   private List<Hook> before;
+
+  /**
+   * Speichert eine Liste mit den Hooks die aufgerufen wurden um das Szenario
+   * abzuschließen.
+   */
   private List<Hook> after;
 
   /**
