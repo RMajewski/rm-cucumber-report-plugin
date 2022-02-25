@@ -236,6 +236,7 @@
         <configuration>
           <locale>de_DE</locale>
           <defaultAuthor>René Majewski</defaultAuthor>
+          <defaultSince>${project.version}</defaultSince>
           <fixTags>author,link,param,return,since,throws</fixTags>
           <level>private</level>
         </configuration>

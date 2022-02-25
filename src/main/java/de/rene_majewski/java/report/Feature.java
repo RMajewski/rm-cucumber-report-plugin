@@ -16,10 +16,10 @@ public class Feature extends Parent{
     super();
     scenarios = new ArrayList<>();
 
-    featureFile = reports.uri.substring(reports.uri.indexOf(":") + 1);
-    description = reports.description;
+    featureFile = reports.getUri().substring(reports.getUri().indexOf(":") + 1);
+    description = reports.getDescription();
 
-    for (CucumberReportElement element : reports.elements) {
+    for (CucumberReportElement element : reports.getElements()) {
       Scenario scenario = new Scenario(element);
       duration += scenario.getDuration();
       scenarios.add(scenario);

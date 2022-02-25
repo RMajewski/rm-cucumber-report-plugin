@@ -25,7 +25,7 @@ public class Scenario extends Parent {
   /**
    * Initialisiert die Klasse.
    *
-   * Importiert die Daten aus dem {@link CucumberReportElement} und bereitet
+   * Importiert die Daten aus dem {@link de.rene_majewski.java.cucumber_import.CucumberReportElement} und bereitet
    * sie zum anzeigen vor.
    *
    * @param element Szenario dessen Daten aufbereitet werden sollen.
@@ -33,15 +33,15 @@ public class Scenario extends Parent {
   public Scenario(CucumberReportElement element) {
     super();
     steps = new ArrayList<>();
-    before = generateHookList(element.before);
-    after = generateHookList(element.after);
+    before = generateHookList(element.getBefore());
+    after = generateHookList(element.getAfter());
 
     name = element.getName();
     keyword = element.getKeyword();
     description = element.getDescription();
-    startedAt = LocalDateTime.parse(element.start_timestamp, DateTimeFormatter.ISO_DATE_TIME);
+    startedAt = LocalDateTime.parse(element.getStartTimestamp(), DateTimeFormatter.ISO_DATE_TIME);
 
-    for (CucumberReportStep crs : element.steps) {
+    for (CucumberReportStep crs : element.getSteps()) {
       Step step = new Step(crs);
       duration += step.getDuration();
       failure = failure || step.isFailure();
@@ -168,9 +168,8 @@ public class Scenario extends Parent {
   /**
    * Erstellt eine Liste mit den ausgeführten Hooks.
    *
-   * @param hooks Array von {@link CucumberReportHook}.
-   *
-   * @return Erstellte Liste mit {@link Hook}s.
+   * @param hooks Array von {@link de.rene_majewski.java.cucumber_import.CucumberReportHook}.
+   * @return Erstellte Liste mit {@link de.rene_majewski.java.report.Hook}s.
    */
   private List<Hook> generateHookList(CucumberReportHook[] hooks) {
     List<Hook> result = new ArrayList<>();
@@ -276,8 +275,7 @@ public class Scenario extends Parent {
    *
    * @param sink {@link org.apache.maven.doxia.sink.Sink}-Objekt das zum
    *             erstellen der HTML-Seite genutzt wird.
-   *
-   * @param hooks Liste mit {@link Hook}-Einträgen die in den Bericht
+   * @param hooks Liste mit {@link de.rene_majewski.java.report.Hook}-Einträgen die in den Bericht
    *              geschrieben werden soll.
    */
   private void writeHook(Sink sink, List<Hook> hooks) {
