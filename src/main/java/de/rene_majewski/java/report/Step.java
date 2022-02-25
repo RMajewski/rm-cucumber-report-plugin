@@ -1,3 +1,19 @@
+/**
+ * Copyright (C) 2022 René Majewski
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package de.rene_majewski.java.report;
 
 import static de.rene_majewski.java.helper.ConstHelper.PASSED;
@@ -22,27 +38,52 @@ import io.cucumber.core.snippets.SnippetGenerator;
 import io.cucumber.core.snippets.SnippetType;
 import io.cucumber.cucumberexpressions.ParameterTypeRegistry;
 
+/**
+ * Bereit die Daten für einen Schritt auf und schreibt diese in den Bericht.
+ *
+ * @author René Majewski
+ * @since 0.1.0
+ */
 public class Step extends Parent {
+  /**
+   * Speichert wie der Schritt beendet wurde.
+   */
   private String status;
+
+  /**
+   * Speichert die Methode die bei diesem Schritt aufgerufen wurde.
+   */
   private String method;
+
+  /**
+   * Speichert die Liste mit Argumenten die an die Methode übergeben wurden.
+   */
   private List<StepArgument> arguments;
 
+  /**
+   * Initialisiert diese Klasse.
+   *
+   * Importiert die Daten aus {@link de.rene_majewski.java.cucumber_import.CucumberReportStep}-Objekt
+   * und bereitet diese zum anzeigen auf.
+   *
+   * @param step a {@link de.rene_majewski.java.cucumber_import.CucumberReportStep} object
+   */
   public Step(CucumberReportStep step) {
     super();
     arguments = new ArrayList<>();
 
-    duration = step.result.duration;
-    keyword = step.keyword;
-    name = step.name;
-    method = step.match.location;
-    pass = step.result.status.equalsIgnoreCase(PASSED);
-    skip = step.result.status.equalsIgnoreCase(SKIP);
-    undefined = step.result.status.equals(UNDEFINED);
-    status = step.result.status;
+    duration = step.getResult().getDuration();
+    keyword = step.getKeyword();
+    name = step.getName();
+    method = step.getMatch().getLocation();
+    pass = step.getResult().getStatus().equalsIgnoreCase(PASSED);
+    skip = step.getResult().getStatus().equalsIgnoreCase(SKIP);
+    undefined = step.getResult().getStatus().equals(UNDEFINED);
+    status = step.getResult().getStatus();
 
-    if (step.match != null && step.match.arguments != null && step.match.arguments.length > 0) {
-      for (CucumberReportMatchArgument arg : step.match.arguments) {
-        StepArgument stepArgument = new StepArgument(arg.val, arg.offset);
+    if (step.getMatch() != null && step.getMatch().getArguments() != null && step.getMatch().getArguments().length > 0) {
+      for (CucumberReportMatchArgument arg : step.getMatch().getArguments()) {
+        StepArgument stepArgument = new StepArgument(arg.getVal(), arg.getOffset());
         arguments.add(stepArgument);
       }
     }
@@ -68,8 +109,8 @@ public class Step extends Parent {
         }
       }).orElse(null);
 
-      if (fp.getPickles().size() > 0) {
-        if (fp.getPickles().get(0).getSteps().size() > 0) {
+      if (fp != null && !fp.getPickles().isEmpty()) {
+        if (!fp.getPickles().get(0).getSteps().isEmpty()) {
           io.cucumber.core.gherkin.Step newStep = fp.getPickles().get(0).getSteps().get(0);
           List<String> snippet = new SnippetGenerator(
             new JavaSnippet(),
@@ -85,6 +126,7 @@ public class Step extends Parent {
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public void writeToReport(Sink sink) {
     SinkTableHelper.writeScenarioRow(
