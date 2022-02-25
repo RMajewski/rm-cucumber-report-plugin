@@ -22,6 +22,15 @@ public class CucumberReport extends CucumberReportGeneral {
   private String[] tags;
 
   /**
+   * Setzt die Attribute auf einen definierten Anfangswert.
+   */
+  public CucumberReport() {
+    elements = null;
+    uri = null;
+    tags = null;
+  }
+
+  /**
    * Gibt das Array mit den einzelnen Elementen zurück.
    *
    * @return Array mit den einzelnen Elementen.
