@@ -1,3 +1,19 @@
+/**
+ * Copyright (C) 2022 René Majewski
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package de.rene_majewski.java.helper;
 
 import java.util.ArrayList;
@@ -6,7 +22,23 @@ import org.apache.maven.doxia.sink.Sink;
 import org.apache.maven.doxia.sink.impl.SinkEventAttributeSet;
 import de.rene_majewski.java.report.StepArgument;
 
+/**
+ * Hilfsklasse die Zeilen in eine Tabelle im {@link Sink}-Objekt schreibt.
+ *
+ * @author René Majewski
+ */
 public class SinkTableHelper {
+  /**
+   * Schreibt die Daten einer Tabellen-Zeile mit 2 Spalten in das
+   * {@link Sink}-Objekt. In der ersten Spalte wird der Text fett dargestellt.
+   *
+   * @param sink Das {@link org.apache.maven.doxia.sink.Sink}-Objekt in das die
+   *             Zeile geschrieben werden soll.
+   *
+   * @param cell1 Text der in die 1. Spalte geschrieben werden soll.
+   *
+   * @param cell2 Text der in die 2. Spalte geschrieben werden soll.
+   */
   public static void writeRow2ColsFirstBold(Sink sink, String cell1, String cell2) {
     sink.tableRow();
     sink.tableCell();
@@ -20,16 +52,98 @@ public class SinkTableHelper {
     sink.tableRow_();
   }
 
+  /**
+   * Schreibt die Daten eines Schrittes in eine Tabellen-Zeile in das
+   * {@link Sink}-Objekt.
+   *
+   * @param sink Das {@link org.apache.maven.doxia.sink.Sink}-Objekt in das die
+   *             Zeile geschrieben werden soll.
+   *
+   * @param keyword Schlüsselwort das mit dem Schritt verbunden ist.
+   *
+   * @param name Text des Schrittes.
+   *
+   * @param status Ergebnis der Ausführung des Schrittes.
+   *
+   * @param duration Dauer der Ausführung des Schrittes.
+   *
+   * @param method Name der Methode die bei dem Schritt aufgerufen wurde.
+   *
+   * @param pass Wurde der Schritt erfolgreich ausgeführt?
+   *
+   * @param failure Wurde der Schritt fehlerhaft ausgeführt wurden?
+   *
+   * @param error Wurde der Schritt mit einem Fehler beendet?
+   *
+   * @param skip Wurde der Schritt ausgelassen?
+   */
   @Deprecated
   public static void writeScenarioRow(Sink sink, String keyword, String name, String status, long duration, String method, boolean pass, boolean failure, boolean error, boolean skip) {
     writeScenarioRow(sink, keyword, name, status, duration, method, pass, failure, error, skip, false);
   }
 
+  /**
+   * Schreibt die Daten eines Schrittes in eine Tabellen-Zeile in das
+   * {@link Sink}-Objekt.
+   *
+   * @param sink Das {@link org.apache.maven.doxia.sink.Sink}-Objekt in das die
+   *             Zeile geschrieben werden soll.
+   *
+   * @param keyword Schlüsselwort das mit dem Schritt verbunden ist.
+   *
+   * @param name Text des Schrittes.
+   *
+   * @param status Ergebnis der Ausführung des Schrittes.
+   *
+   * @param duration Dauer der Ausführung des Schrittes.
+   *
+   * @param method Name der Methode die bei dem Schritt aufgerufen wurde.
+   *
+   * @param pass Wurde der Schritt erfolgreich ausgeführt?
+   *
+   * @param failure Wurde der Schritt fehlerhaft ausgeführt wurden?
+   *
+   * @param error Wurde der Schritt mit einem Fehler beendet?
+   *
+   * @param skip Wurde der Schritt ausgelassen?
+   *
+   * @param undefined Wurde für die Schritt noch keine Methode definiert?
+   */
   @Deprecated
   public static void writeScenarioRow(Sink sink, String keyword, String name, String status, long duration, String method, boolean pass, boolean failure, boolean error, boolean skip, boolean undefined) {
     writeScenarioRow(sink, keyword, name, new ArrayList<>(), status, duration, method, pass, failure, error, skip, undefined);
   }
 
+  /**
+   * Schreibt die Daten eines Schrittes in eine Tabellen-Zeile in das
+   * {@link Sink}-Objekt.
+   *
+   * @param sink Das {@link org.apache.maven.doxia.sink.Sink}-Objekt in das die
+   *             Zeile geschrieben werden soll.
+   *
+   * @param keyword Schlüsselwort das mit dem Schritt verbunden ist.
+   *
+   * @param name Text des Schrittes.
+   *
+   * @param arguments Liste mit den Argumenten die an die ausgeführte Methode
+   *                  übergeben wurde.
+   *
+   * @param status Ergebnis der Ausführung des Schrittes.
+   *
+   * @param duration Dauer der Ausführung des Schrittes.
+   *
+   * @param method Name der Methode die bei dem Schritt aufgerufen wurde.
+   *
+   * @param pass Wurde der Schritt erfolgreich ausgeführt?
+   *
+   * @param failure Wurde der Schritt fehlerhaft ausgeführt wurden?
+   *
+   * @param error Wurde der Schritt mit einem Fehler beendet?
+   *
+   * @param skip Wurde der Schritt ausgelassen?
+   *
+   * @param undefined Wurde für die Schritt noch keine Methode definiert?
+   */
   public static void writeScenarioRow(Sink sink, String keyword, String name,
       List<StepArgument> arguments, String status, long duration, String method, boolean pass,
       boolean failure, boolean error, boolean skip, boolean undefined) {
@@ -144,6 +258,18 @@ public class SinkTableHelper {
     sink.tableRow_();
   }
 
+  /**
+   * Hebt die Argumente im Text des Schrittes hervor.
+   *
+   * @param sink Das {@link org.apache.maven.doxia.sink.Sink}-Objekt in das die
+   *             Zeile geschrieben werden soll.
+   *
+   * @param name Text des Schrittes.
+   *
+   * @param arguments Liste mit den Argumenten die im Text hervorgehoben werden
+   *                  soll. Wenn keine Argumente hervorgerufen werden sollen,
+   *                  dann {@code null} übergeben.
+   */
   private static void writeHighlightedName(Sink sink, String name, List<StepArgument> arguments) {
     if (arguments == null || arguments.isEmpty()) {
       sink.text(name);
@@ -168,5 +294,13 @@ public class SinkTableHelper {
         sink.text(name.substring(startOffset));
       }
     }
+  }
+
+
+  /**
+   * In einer Hilfsklasse wird kein öffentlicher Konstruktor benötigt.
+   */
+  private SinkTableHelper() {
+    throw new IllegalStateException("Utility class");
   }
 }
