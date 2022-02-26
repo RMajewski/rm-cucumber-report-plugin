@@ -328,6 +328,10 @@ public abstract class Parent {
    *
    * @param sink {@link org.apache.maven.doxia.sink.Sink}-Objekt dass zum
    *             erstellen des Berichts benutzt werden soll.
+   *
+   * @param displayDebugStepColumns Gibt an ob die Spalten für den
+   *                                Debug-Prozess im Bericht angezeigt werden
+   *                                sollen {@code true} oder nicht {@code false}.
    */
-  public abstract void writeToReport(Sink sink);
+  public abstract void writeToReport(Sink sink, final boolean displayDebugStepColumns);
 }

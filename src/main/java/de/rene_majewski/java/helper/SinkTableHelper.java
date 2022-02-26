@@ -180,7 +180,7 @@ public class SinkTableHelper {
   public static void writeScenarioRow(Sink sink, String keyword, String name,
       List<StepArgument> arguments, String status, long duration, String method, boolean pass,
       boolean failure, boolean error, boolean skip, boolean undefined) {
-    writeScenarioRow(sink, keyword, name, arguments, status, duration, method, pass, failure, error, skip, undefined, null);
+    writeScenarioRow(sink, keyword, name, arguments, status, duration, method, pass, failure, error, skip, undefined, null, false);
   }
 
   /**
@@ -214,10 +214,15 @@ public class SinkTableHelper {
    * @param undefined Wurde für die Schritt noch keine Methode definiert?
    *
    * @param table Optional. Angaben einer Tabelle die an den Schritt übergeben wurde.
+   *
+   * @param displayDebugStepColumns Gibt an ob die Spalten für den
+   *                                Debug-Prozess im Bericht angezeigt werden
+   *                                sollen {@code true} oder nicht {@code false}.
    */
   public static void writeScenarioRow(Sink sink, String keyword, String name,
       List<StepArgument> arguments, String status, long duration, String method, boolean pass,
-      boolean failure, boolean error, boolean skip, boolean undefined, String table) {
+      boolean failure, boolean error, boolean skip, boolean undefined, String table,
+      final boolean displayDebugStepColumns) {
     String style = "";
     if (pass) {
       style = "color: #16a085;";
@@ -311,35 +316,38 @@ public class SinkTableHelper {
     }
     sink.tableCell_();
 
-    sink.tableCell();
-    if (pass) {
-      sink.text("x");
-    }
-    sink.tableCell_();
+    if (displayDebugStepColumns) {
+      sink.tableCell();
+      if (pass) {
+        sink.text("x");
+      }
+      sink.tableCell_();
 
-    sink.tableCell();
-    if (failure) {
-      sink.text("x");
-    }
-    sink.tableCell_();
+      sink.tableCell();
+      if (failure) {
+        sink.text("x");
+      }
+      sink.tableCell_();
 
-    sink.tableCell();
-    if (error) {
-      sink.text("x");
-    }
-    sink.tableCell_();
+      sink.tableCell();
+      if (error) {
+        sink.text("x");
+      }
+      sink.tableCell_();
 
-    sink.tableCell();
-    if (skip) {
-      sink.text("x");
-    }
-    sink.tableCell_();
+      sink.tableCell();
+      if (skip) {
+        sink.text("x");
+      }
+      sink.tableCell_();
 
-    sink.tableCell();
-    if (undefined) {
-      sink.text("x");
+      sink.tableCell();
+      if (undefined) {
+        sink.text("x");
+      }
+      sink.tableCell_();
     }
-    sink.tableCell_();
+
     sink.tableRow_();
   }
 

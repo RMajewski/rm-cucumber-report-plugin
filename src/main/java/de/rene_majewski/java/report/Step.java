@@ -138,7 +138,7 @@ public class Step extends Parent {
 
   /** {@inheritDoc} */
   @Override
-  public void writeToReport(Sink sink) {
+  public void writeToReport(Sink sink, final boolean displayDebugStepColumns) {
     SinkTableHelper.writeScenarioRow(
       sink,
       keyword,
@@ -152,7 +152,8 @@ public class Step extends Parent {
       error,
       skip,
       undefined,
-      table
+      table,
+      displayDebugStepColumns
     );
   }
 

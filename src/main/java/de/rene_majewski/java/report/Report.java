@@ -221,7 +221,7 @@ public class Report extends Parent {
 
   /** {@inheritDoc} */
   @Override
-  public void writeToReport(Sink sink) {
+  public void writeToReport(Sink sink, final boolean displayDebugStepColumns) {
     // Allgemeine Informationen
     sink.section(1, null);
     sink.sectionTitle(1, null);
@@ -265,7 +265,7 @@ public class Report extends Parent {
 
     // Einzelne Reports für Feature-Dateien
     for (Feature feature : features) {
-      feature.writeToReport(sink);
+      feature.writeToReport(sink, displayDebugStepColumns);
     }
   }
 }

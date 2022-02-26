@@ -135,7 +135,7 @@ public class RmCucumberReportMojo extends AbstractMavenReport {
       sink.body();
 
       // Erzeugung der Report-Seiten
-      report.writeToReport(sink);
+      report.writeToReport(sink, displayDebugStepColumns);
 
       // Body-Abschnitt beenden
       sink.body_();

@@ -143,7 +143,7 @@ public class Scenario extends Parent {
 
   /** {@inheritDoc} */
   @Override
-  public void writeToReport(Sink sink) {
+  public void writeToReport(Sink sink, final boolean displayDebugStepColumns) {
     sink.section(3, null);
     sink.sectionTitle(2, null);
     sink.text(keyword + ": " + name);
@@ -181,11 +181,11 @@ public class Scenario extends Parent {
       },
       false
     );
-    writeScenarioRowHeader(sink);
+    writeScenarioRowHeader(sink, displayDebugStepColumns);
     writeHook(sink, before);
 
     for (Step step : steps) {
-      step.writeToReport(sink);
+      step.writeToReport(sink, displayDebugStepColumns);
     }
 
     writeHook(sink, after);
@@ -219,8 +219,12 @@ public class Scenario extends Parent {
    *
    * @param sink {@link org.apache.maven.doxia.sink.Sink}-Objekt das genutzt
    *             werden soll.
+   *
+   * @param displayDebugStepColumns Gibt an ob die Spalten für den
+   *                                Debug-Prozess im Bericht angezeigt werden
+   *                                sollen {@code true} oder nicht {@code false}.
    */
-  private void writeScenarioRowHeader(Sink sink) {
+  private void writeScenarioRowHeader(Sink sink, final boolean displayDebugStepColumns) {
     sink.tableRow();
     sink.tableHeaderCell();
     sink.tableHeaderCell_();
@@ -245,26 +249,28 @@ public class Scenario extends Parent {
     sink.text("Funktionsaufruf");
     sink.tableHeaderCell_();
 
-    sink.tableHeaderCell();
-    sink.text("Bestanden");
-    sink.tableHeaderCell_();
+    if (displayDebugStepColumns) {
+      sink.tableHeaderCell();
+      sink.text("Bestanden");
+      sink.tableHeaderCell_();
 
-    sink.tableHeaderCell();
-    sink.text("Nicht bestanden");
-    sink.tableHeaderCell_();
+      sink.tableHeaderCell();
+      sink.text("Nicht bestanden");
+      sink.tableHeaderCell_();
 
-    sink.tableHeaderCell();
-    sink.text("Fehler");
-    sink.tableHeaderCell_();
+      sink.tableHeaderCell();
+      sink.text("Fehler");
+      sink.tableHeaderCell_();
 
-    sink.tableHeaderCell();
-    sink.text("Übersprungen");
-    sink.tableHeaderCell_();
+      sink.tableHeaderCell();
+      sink.text("Übersprungen");
+      sink.tableHeaderCell_();
 
-    sink.tableHeaderCell();
-    sink.text("Step fehlt");
-    sink.tableHeaderCell_();
-    sink.tableRow_();
+      sink.tableHeaderCell();
+      sink.text("Step fehlt");
+      sink.tableHeaderCell_();
+      sink.tableRow_();
+    }
   }
 
   /**

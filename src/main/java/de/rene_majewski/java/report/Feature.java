@@ -144,7 +144,7 @@ public class Feature extends Parent{
 
   /** {@inheritDoc} */
   @Override
-  public void writeToReport(Sink sink) {
+  public void writeToReport(Sink sink, final boolean displayDebugStepColumns) {
     sink.section(2, null);
     sink.sectionTitle(2, null);
     sink.text("Feature: " + featureFile);
@@ -169,7 +169,7 @@ public class Feature extends Parent{
     sink.section_(2);
 
     for (Scenario scenario : scenarios) {
-      scenario.writeToReport(sink);
+      scenario.writeToReport(sink, displayDebugStepColumns);
     }
   }
 }
