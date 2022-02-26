@@ -59,10 +59,12 @@ public class Scenario extends Parent {
       duration += step.getDuration();
       failure = failure || step.isFailure();
       error = error || step.isError();
+      undefined = undefined || step.isUndefined();
+      skip = skip || step.isSkip();
       steps.add(step);
     }
 
-    pass = !failure && !error;
+    pass = !failure && !error && !undefined && !skip;
   }
 
   /**
@@ -114,6 +116,19 @@ public class Scenario extends Parent {
   }
 
   /**
+   * Ermittelt die Anzahl an undefinierten Schritten.
+   *
+   * @return Anzahl an undefinierten Schritten.
+   */
+  public int getStepsUndefined() {
+    int result = 0;
+    for (Step step : steps) {
+      result += step.isUndefined() ? 1 : 0;
+    }
+    return result;
+  }
+
+  /**
    * Anzahl an Schritten die einen Fehler aufweisen.
    *
    * @return Anzahl an Schritten die einen Fehler aufweisen.
@@ -146,6 +161,7 @@ public class Scenario extends Parent {
     SinkTableHelper.writeRow2ColsFirstBold(sink, "Anzahl nicht bestandener Schritte", String.valueOf(getStepsFailure()));
     SinkTableHelper.writeRow2ColsFirstBold(sink, "Anzahl fehlerhafter Schritte", String.valueOf(getStepsError()));
     SinkTableHelper.writeRow2ColsFirstBold(sink, "Anzahl übersprungener Schritte", String.valueOf(getStepsSkip()));
+    SinkTableHelper.writeRow2ColsFirstBold(sink, "Anzahl undefinierter Schritte", String.valueOf(getStepsUndefined()));
     sink.table_();
 
     sink.table();
