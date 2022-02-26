@@ -53,6 +53,20 @@ public class RmCucumberReportMojo extends AbstractMavenReport {
   @Parameter(defaultValue = "target/cucumber.json", property = "inputJsonFile", required = true)
   private File inputJsonFile;
 
+  /**
+   * Gibt an ob die Debug-Spalten bei den Schritten mit ausgegeben werden sollen.
+   */
+  @Parameter(defaultValue = "false", property = "displayDebugStepColumns", required = true)
+  private boolean displayDebugStepColumns;
+
+  /**
+   * Gibt an ob die Generierung des Berichts übersprungen werden soll.
+   * {@code true} die Generierung wird übersprungen. {@code false} der Bericht
+   * wird erzeugt.
+   */
+  @Parameter(defaultValue = "false", property = "skip", required = true)
+  private boolean skip;
+
   /** {@inheritDoc} */
   @Override
   public String getDescription(Locale arg0) {
@@ -80,49 +94,53 @@ public class RmCucumberReportMojo extends AbstractMavenReport {
   /** {@inheritDoc} */
   @Override
   protected void executeReport(Locale locale) throws MavenReportException {
-    // Cucumber-Daten einlesen
-    if (!inputJsonFile.exists() || !inputJsonFile.isFile()) {
-      throw new MavenReportException(inputJsonFile.toString() + " not exists");
+    if (!skip) {
+      // Cucumber-Daten einlesen
+      if (!inputJsonFile.exists() || !inputJsonFile.isFile()) {
+        throw new MavenReportException(inputJsonFile.toString() + " not exists");
+      }
+
+      CucumberReport[] data = null;
+
+      try {
+        final Gson gson = new Gson();
+        data = gson.fromJson(new FileReader(inputJsonFile), CucumberReport[].class);
+      } catch (Exception e) {
+        getLog().error("Error parsing file " + inputJsonFile.toString());
+        getLog().error(e);
+      }
+
+      // Baum erstellen
+      Report report = new Report(data);
+
+      // Report erstellen
+      Sink sink = getSink();
+      if (sink == null) {
+        throw new MavenReportException("Could not get Doxia sink");
+      }
+
+      // Report title
+      sink.head();
+      sink.title();
+      sink.text(getDescription(locale));
+      sink.title_();
+      try {
+        SinkCssHelper.writeCssToHeader(sink, getOutputDirectory());
+      } catch (IOException e) {
+        getLog().warn("An error occured while copying the resource to the target directory", e);
+      }
+      sink.head_();
+
+      // Body-Abschnitt
+      sink.body();
+
+      // Erzeugung der Report-Seiten
+      report.writeToReport(sink);
+
+      // Body-Abschnitt beenden
+      sink.body_();
+    } else {
+      getLog().info("The generation of the report is skipped. (skip = true)");
     }
-
-    CucumberReport[] data = null;
-
-    try {
-      final Gson gson = new Gson();
-      data = gson.fromJson(new FileReader(inputJsonFile), CucumberReport[].class);
-    } catch (Exception e) {
-      getLog().error("Error parsing file " + inputJsonFile.toString());
-      getLog().error(e);
-    }
-
-    // Baum erstellen
-    Report report = new Report(data);
-
-    // Report erstellen
-    Sink sink = getSink();
-    if (sink == null) {
-      throw new MavenReportException("Could not get Doxia sink");
-    }
-
-    // Report title
-    sink.head();
-    sink.title();
-    sink.text(getDescription(locale));
-    sink.title_();
-    try {
-      SinkCssHelper.writeCssToHeader(sink, getOutputDirectory());
-    } catch (IOException e) {
-      getLog().warn("An error occured while copying the resource to the target directory", e);
-    }
-    sink.head_();
-
-    // Body-Abschnitt
-    sink.body();
-
-    // Erzeugung der Report-Seiten
-    report.writeToReport(sink);
-
-    // Body-Abschnitt beenden
-    sink.body_();
   }
 }
