@@ -256,7 +256,7 @@ public class Report extends Parent {
     sink.sectionTitle_(2);
     sink.table();
     SinkTableHelper.writeRow2ColsFirstBold(sink, "Anzahl Szenarios", String.valueOf(getAllScenarioCount()));
-    SinkTableHelper.writeRow2ColsFirstBold(sink, "Erfolgreich abgeschlossene Szenarios", String.valueOf(getAllScenarioPassCount()));
+    SinkTableHelper.writeRow2ColsFirstBoldSecondProgress(sink, "Erfolgreich abgeschlossene Szenarios", getAllScenarioPassCount(), getAllScenarioCount(), String.valueOf(getAllScenarioPassCount()));
     SinkTableHelper.writeRow2ColsFirstBold(sink, "Fehlgeschlagene Szenarios", String.valueOf(getAllScenarioFailure()));
     SinkTableHelper.writeRow2ColsFirstBold(sink, "Abgebrochene Szenarios", String.valueOf(getAllScenariosSkip()));
     SinkTableHelper.writeRow2ColsFirstBold(sink, "Anzahl aufgetretene Fehler in Szenarios", String.valueOf(getAllScenarioError()));

@@ -19,6 +19,7 @@ package de.rene_majewski.java;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Locale;
 import com.google.gson.Gson;
 import org.apache.maven.doxia.sink.Sink;
@@ -29,6 +30,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
 import de.rene_majewski.java.cucumber_import.CucumberReport;
+import de.rene_majewski.java.helper.SinkCssHelper;
 import de.rene_majewski.java.report.Report;
 
 /**
@@ -71,6 +73,12 @@ public class RmCucumberReportMojo extends AbstractMavenReport {
 
   /** {@inheritDoc} */
   @Override
+  public boolean canGenerateReport() {
+    return inputJsonFile.exists();
+  }
+
+  /** {@inheritDoc} */
+  @Override
   protected void executeReport(Locale locale) throws MavenReportException {
     // Cucumber-Daten einlesen
     if (!inputJsonFile.exists() || !inputJsonFile.isFile()) {
@@ -101,6 +109,11 @@ public class RmCucumberReportMojo extends AbstractMavenReport {
     sink.title();
     sink.text(getDescription(locale));
     sink.title_();
+    try {
+      SinkCssHelper.writeCssToHeader(sink, getOutputDirectory());
+    } catch (IOException e) {
+      getLog().warn("An error occured while copying the resource to the target directory", e);
+    }
     sink.head_();
 
     // Body-Abschnitt

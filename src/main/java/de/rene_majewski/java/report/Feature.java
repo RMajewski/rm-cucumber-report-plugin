@@ -145,7 +145,7 @@ public class Feature extends Parent{
     SinkTableHelper.writeRow2ColsFirstBold(sink, "Beschreibung", description);
     SinkTableHelper.writeRow2ColsFirstBold(sink, "Ausführungsdauer", DateTimeHelper.formatDuration(duration));
     SinkTableHelper.writeRow2ColsFirstBold(sink, "Anzahl Szenarien", String.valueOf(getScenarioCount()));
-    SinkTableHelper.writeRow2ColsFirstBold(sink, "Erfolgreich", String.valueOf(getScenarioPassCount()));
+    SinkTableHelper.writeRow2ColsFirstBoldSecondProgress(sink, "Erfolgreich", getScenarioPassCount(), getScenarioCount(), String.valueOf(getScenarioPassCount()));
     SinkTableHelper.writeRow2ColsFirstBold(sink, "Fehlgeschlagen", String.valueOf(getScenarioFailureCount()));
     SinkTableHelper.writeRow2ColsFirstBold(sink, "Ausgelassen", String.valueOf(getScenarioSkipCount()));
     SinkTableHelper.writeRow2ColsFirstBold(sink, "Aufgetretene Fehler", String.valueOf(getScenarioErrorCount()));

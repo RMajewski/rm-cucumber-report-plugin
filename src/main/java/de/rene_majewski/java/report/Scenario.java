@@ -142,6 +142,7 @@ public class Scenario extends Parent {
     }
     SinkTableHelper.writeRow2ColsFirstBold(sink, "Status des Szenario", getStatus());
     SinkTableHelper.writeRow2ColsFirstBold(sink, "Anzahl ausgeführter Schritte", String.valueOf(getStepsCount()));
+    SinkTableHelper.writeRow2ColsFirstBoldSecondProgress(sink, "Anzahl bestandener Schritte", getStepsPass(), getStepsCount(), String.valueOf(getStepsPass()));
     SinkTableHelper.writeRow2ColsFirstBold(sink, "Anzahl nicht bestandener Schritte", String.valueOf(getStepsFailure()));
     SinkTableHelper.writeRow2ColsFirstBold(sink, "Anzahl fehlerhafter Schritte", String.valueOf(getStepsError()));
     SinkTableHelper.writeRow2ColsFirstBold(sink, "Anzahl übersprungener Schritte", String.valueOf(getStepsSkip()));

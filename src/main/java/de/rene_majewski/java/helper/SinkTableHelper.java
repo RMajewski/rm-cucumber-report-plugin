@@ -53,6 +53,35 @@ public class SinkTableHelper {
   }
 
   /**
+   * Schreibt die Daten einer Tabellen-Zeile mit 2 Spalten in das
+   * {@link Sink}-Objekt. In der ersten Spalte wird der Text fett dargestellt.
+   * In der zweiten Spalte wird eine Fortschrittsanzeige eingefügt.
+   *
+   * @param sink Das {@link org.apache.maven.doxia.sink.Sink}-Objekt in das die
+   *             Zeile geschrieben werden soll.
+   *
+   * @param cell1 Text der in die 1. Spalte geschrieben werden soll.
+   *
+   * @param value Wert des Fortschritts.
+   *
+   * @param max Maximal Wert des Fortschritts.
+   *
+   * @param label Text der in die Fortschrittsanzeige angezeigt werden soll.
+   */
+  public static void writeRow2ColsFirstBoldSecondProgress(Sink sink, String cell1, final int value, final int max, final String label) {
+    sink.tableRow();
+    sink.tableCell();
+    sink.bold();
+    sink.text(cell1);
+    sink.bold_();
+    sink.tableCell_();
+    sink.tableCell();
+    SinkHelper.writeProgress(sink, value, max, label);
+    sink.tableCell_();
+    sink.tableRow_();
+  }
+
+  /**
    * Schreibt die Daten eines Schrittes in eine Tabellen-Zeile in das
    * {@link Sink}-Objekt.
    *
@@ -295,7 +324,6 @@ public class SinkTableHelper {
       }
     }
   }
-
 
   /**
    * In einer Hilfsklasse wird kein öffentlicher Konstruktor benötigt.
