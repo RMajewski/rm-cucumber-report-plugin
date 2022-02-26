@@ -16,9 +16,12 @@
  */
 package de.rene_majewski.java.helper;
 
+import static org.apache.maven.doxia.sink.SinkEventAttributes.STYLE;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.maven.doxia.markup.HtmlMarkup;
 import org.apache.maven.doxia.sink.Sink;
+import org.apache.maven.doxia.sink.SinkEventAttributes;
 import org.apache.maven.doxia.sink.impl.SinkEventAttributeSet;
 import de.rene_majewski.java.report.StepArgument;
 
@@ -173,9 +176,48 @@ public class SinkTableHelper {
    *
    * @param undefined Wurde für die Schritt noch keine Methode definiert?
    */
+  @Deprecated
   public static void writeScenarioRow(Sink sink, String keyword, String name,
       List<StepArgument> arguments, String status, long duration, String method, boolean pass,
       boolean failure, boolean error, boolean skip, boolean undefined) {
+    writeScenarioRow(sink, keyword, name, arguments, status, duration, method, pass, failure, error, skip, undefined, null);
+  }
+
+  /**
+   * Schreibt die Daten eines Schrittes in eine Tabellen-Zeile in das
+   * {@link Sink}-Objekt.
+   *
+   * @param sink Das {@link org.apache.maven.doxia.sink.Sink}-Objekt in das die
+   *             Zeile geschrieben werden soll.
+   *
+   * @param keyword Schlüsselwort das mit dem Schritt verbunden ist.
+   *
+   * @param name Text des Schrittes.
+   *
+   * @param arguments Liste mit den Argumenten die an die ausgeführte Methode
+   *                  übergeben wurde.
+   *
+   * @param status Ergebnis der Ausführung des Schrittes.
+   *
+   * @param duration Dauer der Ausführung des Schrittes.
+   *
+   * @param method Name der Methode die bei dem Schritt aufgerufen wurde.
+   *
+   * @param pass Wurde der Schritt erfolgreich ausgeführt?
+   *
+   * @param failure Wurde der Schritt fehlerhaft ausgeführt wurden?
+   *
+   * @param error Wurde der Schritt mit einem Fehler beendet?
+   *
+   * @param skip Wurde der Schritt ausgelassen?
+   *
+   * @param undefined Wurde für die Schritt noch keine Methode definiert?
+   *
+   * @param table Optional. Angaben einer Tabelle die an den Schritt übergeben wurde.
+   */
+  public static void writeScenarioRow(Sink sink, String keyword, String name,
+      List<StepArgument> arguments, String status, long duration, String method, boolean pass,
+      boolean failure, boolean error, boolean skip, boolean undefined, String table) {
     String style = "";
     if (pass) {
       style = "color: #16a085;";
@@ -189,16 +231,18 @@ public class SinkTableHelper {
       style = "color: #e74c3c;";
     }
 
-    if (skip) {
+    if (skip && status.equals(ConstHelper.SKIP)) {
       style = "color: #3498db;";
     }
 
-    if (undefined) {
+    if (undefined && status.equals(ConstHelper.UNDEFINED)) {
       style = "color: #d4ac0d; font-weight: bolder;";
     }
 
     SinkEventAttributeSet atts = new SinkEventAttributeSet();
-    atts.addAttribute(SinkEventAttributeSet.STYLE, style);
+    if (!style.isEmpty()) {
+      atts.addAttribute(STYLE, style);
+    }
 
     sink.tableRow();
     sink.tableCell();
@@ -230,6 +274,15 @@ public class SinkTableHelper {
     sink.tableCell();
     if (name != null && !name.isEmpty()) {
       writeHighlightedName(sink, name, arguments);
+
+      if (table != null && !table.isEmpty()) {
+        SinkEventAttributeSet tableAtts = new SinkEventAttributeSet();
+        tableAtts.addAttribute(SinkEventAttributes.STYLE, "color: #297bde;");
+
+        sink.verbatim(tableAtts);
+        sink.text(table);
+        sink.verbatim_();
+      }
     }
     sink.tableCell_();
 
@@ -245,10 +298,13 @@ public class SinkTableHelper {
 
     sink.tableCell();
     if (method != null && !method.isEmpty()) {
-      if (method.indexOf("\n") > 0) {
+      if (method.indexOf("\n") > -1) {
+        SinkEventAttributeSet codeAtts = new SinkEventAttributeSet();
+        sink.unknown("code", new Object[] { Integer.valueOf(HtmlMarkup.TAG_TYPE_START)}, codeAtts);
         sink.verbatim(null);
         sink.text(method);
         sink.verbatim_();
+        sink.unknown("code", new Object[] { Integer.valueOf(HtmlMarkup.TAG_TYPE_END)}, null);
       } else {
         sink.text(method);
       }

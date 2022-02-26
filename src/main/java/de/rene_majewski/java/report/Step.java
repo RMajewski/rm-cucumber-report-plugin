@@ -30,6 +30,7 @@ import java.util.UUID;
 import org.apache.maven.doxia.sink.Sink;
 import de.rene_majewski.java.cucumber_import.CucumberReportMatchArgument;
 import de.rene_majewski.java.cucumber_import.CucumberReportStep;
+import de.rene_majewski.java.cucumber_import.CucumberReportStepRow;
 import de.rene_majewski.java.helper.JavaSnippet;
 import de.rene_majewski.java.helper.SinkTableHelper;
 import io.cucumber.core.feature.FeatureParser;
@@ -61,6 +62,11 @@ public class Step extends Parent {
   private List<StepArgument> arguments;
 
   /**
+   * Speichert den aufbereiteten Inhalt eine möglichen Tabelle.
+   */
+  private String table;
+
+  /**
    * Initialisiert diese Klasse.
    *
    * Importiert die Daten aus {@link de.rene_majewski.java.cucumber_import.CucumberReportStep}-Objekt
@@ -80,13 +86,17 @@ public class Step extends Parent {
     skip = step.getResult().getStatus().equalsIgnoreCase(SKIP);
     undefined = step.getResult().getStatus().equals(UNDEFINED);
     status = step.getResult().getStatus();
+    table = generateTableContent(step.getRows());
 
+    // Wenn Argumente gegeben sind, diese übernehmen
     if (step.getMatch() != null && step.getMatch().getArguments() != null && step.getMatch().getArguments().length > 0) {
       for (CucumberReportMatchArgument arg : step.getMatch().getArguments()) {
         StepArgument stepArgument = new StepArgument(arg.getVal(), arg.getOffset());
         arguments.add(stepArgument);
       }
     }
+
+    // Wenn eine Tabelle angegeben ist, diese übernehmen
 
     // Snippet generieren wenn es undefiniert ist.
     if (method == null || method.isEmpty()) {
@@ -141,7 +151,66 @@ public class Step extends Parent {
       failure,
       error,
       skip,
-      undefined
+      undefined,
+      table
     );
+  }
+
+  /**
+   * Bereitet den Inhalt einer möglichen Tabelle auf und gibt diesen ale
+   * Zeichenkette zurück.
+   *
+   * @param rows Zeilen der enthaltenen Tabelle.
+   *
+   * @return Aufbereiteter Inhalt der Tabelle. Wenn keine Tabelle übergeben
+   *         wurde oder diese keine Zeilen enthält wird {@code null} zurück
+   *         gegeben.
+   */
+  private String generateTableContent(List<CucumberReportStepRow> rows) {
+    String result = null;
+
+    if (rows != null && !rows.isEmpty()) {
+      int[] length = new int[rows.get(0).getCells().size()];
+
+      // Maximal Länge der einzelnen Spalten berechnen
+      for (CucumberReportStepRow row : rows) {
+        final List<String> cells = row.getCells();
+        for (int i = 0; i < cells.size(); i++) {
+          if (length[i] < cells.get(i).length()) {
+            length[i] = cells.get(i).length();
+          }
+        }
+      }
+
+      // Inhalt der Tabelle aufbereiten
+      StringBuilder sb = new StringBuilder();
+      for (CucumberReportStepRow row : rows) {
+        final List<String> cells = row.getCells();
+        for (int i = 0; i < cells.size(); i++) {
+          if (i > 0) {
+            sb.append(" ");
+          }
+          sb.append("|");
+
+          final String tmp = cells.get(i);
+          sb.append(tmp);
+
+          if (tmp.length() < length[i]) {
+            for (int j = tmp.length(); j < length[i]; j++) {
+              sb.append(" ");
+            }
+          }
+
+          sb.append(" ");
+
+          if (i == (cells.size() - 1)) {
+            sb.append("|\n");
+          }
+        }
+      }
+      result = sb.toString();
+    }
+
+    return result;
   }
 }

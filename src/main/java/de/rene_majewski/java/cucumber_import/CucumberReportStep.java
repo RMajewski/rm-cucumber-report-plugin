@@ -16,6 +16,9 @@
  */
 package de.rene_majewski.java.cucumber_import;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Speichert die Daten zu einem Schritt.
  *
@@ -49,6 +52,11 @@ public class CucumberReportStep {
   private String keyword;
 
   /**
+   * Speichert die Liste mit den Zeilen einer angehängten Tabellen.
+   */
+  private List<CucumberReportStepRow> rows;
+
+  /**
    * Setzt die Attribute auf einen definierten Anfangswert.
    */
   public CucumberReportStep() {
@@ -57,6 +65,7 @@ public class CucumberReportStep {
     name = null;
     match = null;
     keyword = null;
+    rows = new ArrayList<>();
   }
 
   /**
@@ -148,4 +157,24 @@ public class CucumberReportStep {
   public void setKeyword(String keyword) {
     this.keyword = keyword;
   }
+
+  /**
+   * Ermittelt die Zeilen einer möglichen Tabelle.
+   *
+   * @return Zeilen einer möglichen Tabelle.
+   */
+  public List<CucumberReportStepRow> getRows() {
+    return rows;
+  }
+
+  /**
+   * Setzt die Zeilen einer möglichen Tabelle.
+   *
+   * @param rows Zeilen einer möglichen Tabelle.
+   */
+  public void setRows(List<CucumberReportStepRow> rows) {
+    this.rows = rows;
+  }
+
+
 }
